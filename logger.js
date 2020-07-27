@@ -4,7 +4,7 @@ let winston = require('winston');
 let util = require('util');
 let path = require('path');
 
-module.exports = class MCLogger extends winston.Logger {
+module.exports.MCLogger = class MCLogger extends winston.Logger {
 
     constructor(config, service) {
         let params = {
