@@ -1,0 +1,15 @@
+{
+    "name": "mc-logger",
+    "version": "1.0.11",
+    "description": "Map-Colonies Logger",
+    "main": "logger.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Map-Colonies inc",
+    "license": "ISC",
+    "dependencies": {
+        "opentracing": "^0.14.1",
+        "winston": "^2.1.1"
+    }
+}
