@@ -17,7 +17,7 @@ const config ={
     log2file: true
 }
 
-const logger = new MCLogger(config,service);
+const logger = new MCLogger(config, service);
 
 logger.info('logger is logging');
 ```

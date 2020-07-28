@@ -30,7 +30,7 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
         if (file_transports) {
             const logDir = path.resolve('./logs');
             if(!fs.existsSync(logDir)){
-                fs.mkdirSync(logDir)
+                fs.mkdirSync(logDir);
             }
 
             params.transports.push(new winston.transports.File({
