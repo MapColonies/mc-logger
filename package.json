@@ -1,5 +1,5 @@
 {
-	"name": "mc-logger",
+	"name": "@map-colonies/mc-logger",
 	"version": "1.0.11",
 	"description": "Map-Colonies Logger",
 	"main": "logger.js",
