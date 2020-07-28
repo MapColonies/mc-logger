@@ -9,11 +9,15 @@ $ npm install --save mc-logger
 ## Usage
 
 ```js
-var mcLogger = require("./logger");
-var service = require("./package.json");
+const { MCLogger } = require("@map-colonies/mc-logger");
+const service = require("./package.json");
 
+const config ={
+    level:'info',
+    log2file: true
+}
 
-var logger = new mcLogger(service, 'info');
+const logger = new MCLogger(config, service);
 
-logger.error('teafksfvmjsk kk');
+logger.info('logger is logging');
 ```
