@@ -1,7 +1,5 @@
 'use strict';
 
-let mcLogger = require("./logger");
+const mcLogger = require('./logger');
 
 module.exports = mcLogger;
-
-
