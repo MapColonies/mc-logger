@@ -3,7 +3,7 @@
 ## Install
 
 ```
-$ npm install --save mc-logger
+$ npm install --save @map-colonies/mc-logger
 ```
 
 ## Usage
