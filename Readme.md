@@ -48,3 +48,5 @@ port: optional, default is 80 or 443\
 path: optional, default is '/'\
 auth: optional, default is None\
 ssl: optional, default is false
+
+Note: log2file is not supported on client-side
