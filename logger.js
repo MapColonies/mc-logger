@@ -1,8 +1,6 @@
 'use strict';
 
 const winston = require('winston');
-const path = require('path');
-const fs = require('fs');
 
 module.exports.MCLogger = class MCLogger extends winston.Logger {
   constructor(config, service) {
@@ -31,6 +29,9 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
         ? config.log2file === 'true'
         : config.log2file;
     if (fileTransports) {
+      const path = require('path');
+      const fs = require('fs');
+
       const logDir = path.resolve('./logs');
       if (!fs.existsSync(logDir)) {
         fs.mkdirSync(logDir);
