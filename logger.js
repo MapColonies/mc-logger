@@ -28,6 +28,7 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
       typeof config.log2file === 'string'
         ? config.log2file === 'true'
         : config.log2file;
+
     if (fileTransports) {
       const path = require('path');
       const fs = require('fs');
@@ -54,6 +55,13 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
           maxFiles: 5,
           level: 'error'
         })
+      );
+    }
+
+    if(config.log2httpServer) {
+      const serverOptions = config.log2httpServer;
+      params.transports.push(
+        new winston.transports.Http(serverOptions)
       );
     }
 

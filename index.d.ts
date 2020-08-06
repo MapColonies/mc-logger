@@ -9,6 +9,13 @@ interface LogMethod {
 export interface LoggerConfig {
   level: string;
   log2file?: boolean;
+  log2httpServer?: {
+    host: string;
+    port?: number;
+    path?: string;
+    auth?: unknown;
+    ssl?: boolean;
+  };
 }
 
 export interface ServiceConfig {
