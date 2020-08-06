@@ -1,7 +1,6 @@
 'use strict';
 
 const winston = require('winston');
-const util = require('util');
 const path = require('path');
 const fs = require('fs');
 
@@ -17,16 +16,9 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
           },
           json: false,
           formatter: function (options) {
-            let logMessage = util.format(
-              '[%s] [%s] [%s] [%s] %s',
-              options.timestamp(),
-              options.level,
-              service.name,
-              service.version,
-              options.message
-            );
+            let logMessage = `[${options.timestamp()}] [${options.level}] [${service.name}] [${service.version}] ${options.message}`;
             if (options.meta && Object.keys(options.meta).length) {
-              logMessage += util.format(' [%j]', options.meta);
+              logMessage += ` [${JSON.stringify(options.meta)}]`;
             }
             return logMessage;
           }
