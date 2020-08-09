@@ -6,6 +6,12 @@ function convertToBoolean(value) {
   return typeof value === 'string' ? value === 'true' : value;
 }
 
+function validateHttpConfig(httpOptions) {
+  if(!httpOptions.hasOwnProperty('host')) {
+    throw 'The property host is omitted from config option log2httpServer. Please fill this field or remove the option.'
+  }
+}
+
 module.exports.MCLogger = class MCLogger extends winston.Logger {
   constructor(config, service) {
     const params = {
@@ -63,10 +69,11 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
       );
     }
 
-    if(config.log2httpServer) {
-      const serverOptions = config.log2httpServer;
+    if(serverLog) {
+      // validate server log config option
+      validateHttpConfig(config.log2httpServer);
       params.transports.push(
-        new winston.transports.Http(serverOptions)
+        new winston.transports.Http(serverLog)
       );
     }
 

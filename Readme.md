@@ -50,5 +50,5 @@ The config 'log2httpServer' option has the following fields:
 * ssl: optional, default is false
 
 ## Notes
-* log2file is not supported on client-side.
-* log2console is present as default, unless log2httpServer option is added to config. In this case, you need to add log2console explicitly to the config.
+* log2file and log2console are not supported on client-side.
+* log2console is set as default if no other option is present.
