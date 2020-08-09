@@ -2,32 +2,37 @@
 
 const winston = require('winston');
 
+function convertToBoolean(value) {
+  return typeof value === 'string' ? value === 'true' : value;
+}
+
 module.exports.MCLogger = class MCLogger extends winston.Logger {
   constructor(config, service) {
     const params = {
       level: config.level || 'debug',
       name: service.name,
-      transports: [
-        new winston.transports.Console({
-          timestamp: function () {
-            return new Date().toISOString();
-          },
-          json: false,
-          formatter: function (options) {
-            let logMessage = `[${options.timestamp()}] [${options.level}] [${service.name}] [${service.version}] ${options.message}`;
-            if (options.meta && Object.keys(options.meta).length) {
-              logMessage += ` [${JSON.stringify(options.meta)}]`;
-            }
-            return logMessage;
-          }
-        })
-      ]
+      transports: []
     };
 
-    const fileTransports =
-      typeof config.log2file === 'string'
-        ? config.log2file === 'true'
-        : config.log2file;
+    const consoleLog = convertToBoolean(config.log2console);
+    const fileTransports = convertToBoolean(config.log2file);
+    const serverLog = config.log2httpServer;
+
+    if(!serverLog || consoleLog) {
+      params.transports.push(new winston.transports.Console({
+        timestamp: function () {
+          return new Date().toISOString();
+        },
+        json: false,
+        formatter: function (options) {
+          let logMessage = `[${options.timestamp()}] [${options.level}] [${service.name}] [${service.version}] ${options.message}`;
+          if (options.meta && Object.keys(options.meta).length) {
+            logMessage += ` [${JSON.stringify(options.meta)}]`;
+          }
+          return logMessage;
+        }
+      }));
+    }
 
     if (fileTransports) {
       const path = require('path');
