@@ -24,7 +24,8 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
     const fileTransports = convertToBoolean(config.log2file);
     const serverLog = config.log2httpServer;
 
-    if(!serverLog || consoleLog) {
+    // check if the config has an option set that isn't 'level', or if log2console is present
+    if(Object.keys(config).length === 1 || consoleLog) {
       params.transports.push(new winston.transports.Console({
         timestamp: function () {
           return new Date().toISOString();
