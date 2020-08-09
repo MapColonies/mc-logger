@@ -8,12 +8,23 @@ function convertToBoolean(value) {
 
 function validateHttpConfig(httpOptions) {
   if(!httpOptions.hasOwnProperty('host')) {
-    throw 'The property host is omitted from config option log2httpServer. Please fill this field or remove the option.'
+    throw new Error('The property host is omitted from config option log2httpServer. Please fill this field or remit might expect a full Error instance and not a plain stringove the option.');
   }
 }
 
 module.exports.MCLogger = class MCLogger extends winston.Logger {
   constructor(config, service) {
+
+    if(!service) {
+      throw new Error('Config is required.');
+    }
+    if(!config) {
+      throw new Error('Config is required.');
+    }
+    if(!config.level) {
+      throw new Error('Level property is required in config.');
+    }
+
     const params = {
       level: config.level || 'debug',
       name: service.name,
@@ -25,7 +36,12 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
     const serverLog = config.log2httpServer;
 
     // check if the config has an option set that isn't 'level', or if log2console is present
-    if(Object.keys(config).length === 1 || consoleLog) {
+    const configKeysLength = Object.keys(config).length;
+    if(configKeysLength === 1 || consoleLog) {
+      if(configKeysLength === 1) {
+        console.warn('No configuration was provided, adding default console logger.');
+      }
+
       params.transports.push(new winston.transports.Console({
         timestamp: function () {
           return new Date().toISOString();
