@@ -36,9 +36,9 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
     const serverLog = config.log2httpServer;
 
     // check if the config has an option set that isn't 'level', or if log2console is present
-    const configKeysLength = Object.keys(config).length;
-    if(configKeysLength === 1 || consoleLog) {
-      if(configKeysLength === 1) {
+    const defaultAddConsoleLog = !fileTransports && !serverLog;
+    if(defaultAddConsoleLog || consoleLog) {
+      if(defaultAddConsoleLog) {
         console.warn('No configuration was provided, adding default console logger.');
       }
 
