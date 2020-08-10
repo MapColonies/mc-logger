@@ -8,8 +8,39 @@ function convertToBoolean(value) {
 
 function validateHttpConfig(httpOptions) {
   if(!httpOptions.hasOwnProperty('host')) {
-    throw new Error('The property host is omitted from config option log2httpServer. Please fill this field or remit might expect a full Error instance and not a plain stringove the option.');
+    throw new Error('The property host is omitted from config option log2httpServer. Please fill this field or remove the property.');
   }
+}
+
+function generateConsoleTransport(service) {
+  return new winston.transports.Console({
+    timestamp: function () {
+      return new Date().toISOString();
+    },
+    json: false,
+    formatter: function (options) {
+      let logMessage = `[${options.timestamp()}] [${options.level}] [${service.name}] [${service.version}] ${options.message}`;
+      if (options.meta && Object.keys(options.meta).length) {
+        logMessage += ` [${JSON.stringify(options.meta)}]`;
+      }
+      return logMessage;
+    }
+  });
+}
+
+function generateFileTransport(level) {
+  const path = require('path');
+  return new winston.transports.File({
+    name: `${level}-file`,
+    filename: path.resolve(`./logs/filelog-${level}.log`),
+    maxsize: 5242880, // 5MB
+    maxFiles: 5,
+    level: level
+  });
+}
+
+function generateHttpTransport(serverLogConfig) {
+  return new winston.transports.Http(serverLogConfig);
 }
 
 module.exports.MCLogger = class MCLogger extends winston.Logger {
@@ -32,32 +63,14 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
     };
 
     const consoleLog = convertToBoolean(config.log2console);
-    const fileTransports = convertToBoolean(config.log2file);
-    const serverLog = config.log2httpServer;
+    const fileLog = convertToBoolean(config.log2file);
+    const serverLogConfig = config.log2httpServer;
 
-    // check if the config has an option set that isn't 'level', or if log2console is present
-    const defaultAddConsoleLog = !fileTransports && !serverLog;
-    if(defaultAddConsoleLog || consoleLog) {
-      if(defaultAddConsoleLog) {
-        console.warn('No configuration was provided, adding default console logger.');
-      }
-
-      params.transports.push(new winston.transports.Console({
-        timestamp: function () {
-          return new Date().toISOString();
-        },
-        json: false,
-        formatter: function (options) {
-          let logMessage = `[${options.timestamp()}] [${options.level}] [${service.name}] [${service.version}] ${options.message}`;
-          if (options.meta && Object.keys(options.meta).length) {
-            logMessage += ` [${JSON.stringify(options.meta)}]`;
-          }
-          return logMessage;
-        }
-      }));
+    if(consoleLog) {
+      params.transports.push(generateConsoleTransport(service));
     }
 
-    if (fileTransports) {
+    if (fileLog) {
       const path = require('path');
       const fs = require('fs');
 
@@ -66,32 +79,20 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
         fs.mkdirSync(logDir);
       }
 
-      params.transports.push(
-        new winston.transports.File({
-          name: 'info-file',
-          filename: path.resolve('./logs/filelog-info.log'),
-          maxsize: 5242880, // 5MB
-          maxFiles: 5,
-          level: 'info'
-        })
-      );
-      params.transports.push(
-        new winston.transports.File({
-          name: 'error-file',
-          filename: path.resolve('./logs/filelog-error.log'),
-          maxsize: 5242880, // 5MB
-          maxFiles: 5,
-          level: 'error'
-        })
-      );
+      params.transports.push(generateFileTransport('info'));
+      params.transports.push(generateFileTransport('error'));
     }
 
-    if(serverLog) {
+    if(serverLogConfig) {
       // validate server log config option
-      validateHttpConfig(config.log2httpServer);
-      params.transports.push(
-        new winston.transports.Http(serverLog)
-      );
+      validateHttpConfig(serverLogConfig);
+      params.transports.push(generateHttpTransport(serverLogConfig));
+    }
+
+    // check if transports array is empty
+    if(!params.transports.length) {
+      console.warn('No configuration was provided, adding default console logger.');
+      params.transports.push(generateConsoleTransport(service));
     }
 
     super(params);
