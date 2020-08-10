@@ -2,32 +2,60 @@
 
 const winston = require('winston');
 
+function convertToBoolean(value) {
+  return typeof value === 'string' ? value === 'true' : value;
+}
+
+function validateHttpConfig(httpOptions) {
+  if(!httpOptions.hasOwnProperty('host')) {
+    throw new Error('The property host is omitted from config option log2httpServer. Please fill this field or remit might expect a full Error instance and not a plain stringove the option.');
+  }
+}
+
 module.exports.MCLogger = class MCLogger extends winston.Logger {
   constructor(config, service) {
+
+    if(!service) {
+      throw new Error('Config is required.');
+    }
+    if(!config) {
+      throw new Error('Config is required.');
+    }
+    if(!config.level) {
+      throw new Error('Level property is required in config.');
+    }
+
     const params = {
       level: config.level || 'debug',
       name: service.name,
-      transports: [
-        new winston.transports.Console({
-          timestamp: function () {
-            return new Date().toISOString();
-          },
-          json: false,
-          formatter: function (options) {
-            let logMessage = `[${options.timestamp()}] [${options.level}] [${service.name}] [${service.version}] ${options.message}`;
-            if (options.meta && Object.keys(options.meta).length) {
-              logMessage += ` [${JSON.stringify(options.meta)}]`;
-            }
-            return logMessage;
-          }
-        })
-      ]
+      transports: []
     };
 
-    const fileTransports =
-      typeof config.log2file === 'string'
-        ? config.log2file === 'true'
-        : config.log2file;
+    const consoleLog = convertToBoolean(config.log2console);
+    const fileTransports = convertToBoolean(config.log2file);
+    const serverLog = config.log2httpServer;
+
+    // check if the config has an option set that isn't 'level', or if log2console is present
+    const configKeysLength = Object.keys(config).length;
+    if(configKeysLength === 1 || consoleLog) {
+      if(configKeysLength === 1) {
+        console.warn('No configuration was provided, adding default console logger.');
+      }
+
+      params.transports.push(new winston.transports.Console({
+        timestamp: function () {
+          return new Date().toISOString();
+        },
+        json: false,
+        formatter: function (options) {
+          let logMessage = `[${options.timestamp()}] [${options.level}] [${service.name}] [${service.version}] ${options.message}`;
+          if (options.meta && Object.keys(options.meta).length) {
+            logMessage += ` [${JSON.stringify(options.meta)}]`;
+          }
+          return logMessage;
+        }
+      }));
+    }
 
     if (fileTransports) {
       const path = require('path');
@@ -58,10 +86,11 @@ module.exports.MCLogger = class MCLogger extends winston.Logger {
       );
     }
 
-    if(config.log2httpServer) {
-      const serverOptions = config.log2httpServer;
+    if(serverLog) {
+      // validate server log config option
+      validateHttpConfig(config.log2httpServer);
       params.transports.push(
-        new winston.transports.Http(serverOptions)
+        new winston.transports.Http(serverLog)
       );
     }
 

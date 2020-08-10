@@ -42,11 +42,13 @@ const logger = new MCLogger(config, service);
 logger.info('logger is logging');
 ```
 
-The config 'log2httpServer' option has the following fields:\
-host: required\
-port: optional, default is 80 or 443\
-path: optional, default is '/'\
-auth: optional, default is None\
-ssl: optional, default is false
+The config 'log2httpServer' option has the following fields:
+* host: required
+* port: optional, default is 80 or 443
+* path: optional, default is '/'
+* auth: optional, default is None
+* ssl: optional, default is false
 
-Note: log2file is not supported on client-side
+## Notes
+* log2file and log2console are not supported on client-side.
+* log2console is set as default if no other option is present.

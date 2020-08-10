@@ -8,6 +8,7 @@ interface ILogMethod {
 
 export interface ILoggerConfig {
   level: string;
+  log2console?: boolean;
   log2file?: boolean;
   log2httpServer?: {
     host: string;
