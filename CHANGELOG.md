@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file. See [standa
 ### 1.2.1 (2020-08-10)
 
 
-### Features
+### Bug Fixes
 
-* added option log2console ([#7](https://github.com/MapColonies/mc-logger/issues/7)) ([926c0f2](https://github.com/MapColonies/mc-logger/commit/926c0f22a966f74406b8d5a5769662cf27eb2c59))
+* check if config has options set ([#10](https://github.com/MapColonies/mc-logger/issues/10)) ([716d5bf](https://github.com/MapColonies/mc-logger/commit/716d5bf627a2a59e17261388a0f1516b1cb362a5))
 
 ## 1.2.0 (2020-08-10)
 
