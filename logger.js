@@ -40,7 +40,7 @@ module.exports.MCLogger = class MCLogger {
         }
 
         const params = {
-            level: config.level || 'debug',
+            level: config.level || 'warn',
             name: service.name,
             transports: []
         };
