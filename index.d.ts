@@ -1,22 +1,12 @@
-import { LogCallback, LoggerInstance, Logger } from 'winston';
-interface ILogMethod {
-  (level: string, msg: string, callback: LogCallback): LoggerInstance;
-  (level: string, msg: string, meta: any, callback: LogCallback): LoggerInstance;
-  (level: string, msg: string, ...meta: any[]): LoggerInstance;
-  (level: string, msg: string, span?: unknown): LoggerInstance;
-}
+import { LeveledLogMethod, Logger, LogMethod } from 'winston';
+import { HttpTransportOptions } from 'winston/lib/winston/transports';
+
 
 export interface ILoggerConfig {
   level: string;
   log2console?: boolean;
   log2file?: boolean;
-  log2httpServer?: {
-    host: string;
-    port?: number;
-    path?: string;
-    auth?: unknown;
-    ssl?: boolean;
-  };
+  log2httpServer?: HttpTransportOptions;
 }
 
 export interface IServiceConfig {
@@ -24,7 +14,16 @@ export interface IServiceConfig {
   version: string;
 }
 
-export declare class MCLogger extends Logger {
+export declare class MCLogger {
   constructor(config: ILoggerConfig, service: IServiceConfig);
-  log: ILogMethod;
+  log: LogMethod;
+  originalWinstonLogger: Logger;
+
+  error: LeveledLogMethod;
+  warn: LeveledLogMethod;
+  info: LeveledLogMethod;
+  http: LeveledLogMethod;
+  verbose: LeveledLogMethod;
+  debug: LeveledLogMethod;
+  silly: LeveledLogMethod;
 }
