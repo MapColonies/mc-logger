@@ -23,8 +23,7 @@ function generateFileTransport(level) {
 }
 
 function generateHttpTransport(serverLogConfig) {
-    const httpTransport = new transports.Http(serverLogConfig);
-    return httpTransport;
+    return new transports.Http(serverLogConfig);
 }
 
 module.exports.MCLogger = class MCLogger {
@@ -87,6 +86,9 @@ module.exports.MCLogger = class MCLogger {
                 format.timestamp({
                     format: 'YYYY-MM-DD HH:mm:ss'
                 }),
+                // todo: return when new winston npm version is released (merged to master)
+                //  issue: https://github.com/winstonjs/winston/issues/1724
+                //  fix: https://github.com/winstonjs/logform/pull/106
                 // format.errors({ stack: true }),
                 format.splat(),
                 format.json()
