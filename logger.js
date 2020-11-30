@@ -23,7 +23,8 @@ function generateFileTransport(level) {
 }
 
 function generateHttpTransport(serverLogConfig) {
-    new transports.http(serverLogConfig);
+    const httpTransport = new transports.Http(serverLogConfig);
+    return httpTransport;
 }
 
 module.exports.MCLogger = class MCLogger {
@@ -42,6 +43,7 @@ module.exports.MCLogger = class MCLogger {
         const params = {
             level: config.level || 'warn',
             name: service.name,
+            version: service.version,
             transports: []
         };
 
@@ -69,7 +71,8 @@ module.exports.MCLogger = class MCLogger {
         if (serverLogConfig) {
             // validate server log config option
             validateHttpConfig(serverLogConfig);
-            params.transports.push(generateHttpTransport(serverLogConfig));
+            const httpTransport = generateHttpTransport(serverLogConfig);
+            params.transports.push(httpTransport);
         }
 
         // check if transports array is empty
@@ -84,11 +87,11 @@ module.exports.MCLogger = class MCLogger {
                 format.timestamp({
                     format: 'YYYY-MM-DD HH:mm:ss'
                 }),
-                format.errors({ stack: true }),
+                // format.errors({ stack: true }),
                 format.splat(),
                 format.json()
             ),
-            defaultMeta: { service: params.name },
+            defaultMeta: { service: params.name, version: params.version },
             transports: params.transports
         });
     }
