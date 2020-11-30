@@ -1,3 +1,8 @@
 test*
 logs
 *.log
+
+.vscode
+.idea
+commitlint*
+.eslintrc*
