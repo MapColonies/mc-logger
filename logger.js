@@ -110,37 +110,37 @@ module.exports.MCLogger = class MCLogger {
     }
 
     // error
-    error(msg, splat) {
-        this.log('error', msg, splat);
+    error(...args) {
+        return this.originalWinstonLogger.error(...args)
     }
 
     // warn
-    warn(msg, splat) {
-        this.log('warn', msg, splat);
+    warn(...args) {
+        return this.originalWinstonLogger.warn(...args)
     }
 
     // info
-    info(msg, splat) {
-        this.log('info', msg, splat);
+    info(...args) {
+        return this.originalWinstonLogger.info(...args)
     }
 
     // http
-    http(msg, splat) {
-        this.log('http', msg, splat);
+    http(...args) {
+        return this.originalWinstonLogger.http(...args)
     }
 
     // verbose
-    verbose(msg, splat) {
-        this.log('verbose', msg, splat);
+    verbose(...args) {
+        return this.originalWinstonLogger.verbose(...args)
     }
 
     // debug
-    debug(msg, splat) {
-        this.log('debug', msg, splat);
+    debug(...args) {
+        return this.originalWinstonLogger.debug(...args)
     }
 
     // silly;
-    silly(msg, splat) {
-        this.log('silly', msg, splat);
+    silly(...args) {
+        return this.originalWinstonLogger.silly(...args)
     }
 };
