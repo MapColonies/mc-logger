@@ -80,6 +80,12 @@ module.exports.MCLogger = class MCLogger {
             params.transports.push(new transports.Console());
         }
 
+        const extraDataFormat = format(info => {
+            info.service = params.name;
+            info.version = params.version;
+            return info;
+        });
+
         this.originalWinstonLogger = createLogger({
             level: params.level,
             format: format.combine(
@@ -91,177 +97,55 @@ module.exports.MCLogger = class MCLogger {
                 //  fix: https://github.com/winstonjs/logform/pull/106
                 // format.errors({ stack: true }),
                 format.splat(),
+                extraDataFormat(),
                 format.json()
             ),
-            defaultMeta: { service: params.name, version: params.version },
             transports: params.transports
         });
     }
 
     // log
-    log(level, message) {
-        this.originalWinstonLogger.log(level, message);
-    }
-
-    log(level, message, callback) {
-        this.originalWinstonLogger.log(level, message, callback);
-    }
-
-    log(level, message, meta, callback) {
-        this.originalWinstonLogger.log(level, message, meta, callback);
-    }
-
-    log(level, message, ...meta) {
-        this.originalWinstonLogger.log(level, message, meta);
-    }
-
-    log(entry) {
-        this.originalWinstonLogger.log(entry);
+    log(level, msg, splat) {
+        if (arguments.length === 1) {
+            return this.originalWinstonLogger.log(level);
+        } else if (arguments.length === 2) {
+            return this.originalWinstonLogger.log(level, msg);
+        } // else
+        return this.originalWinstonLogger.log(level, msg, splat);
     }
 
     // error
-    error(message, callback) {
-        this.originalWinstonLogger.error(message, callback);
-    }
-
-    error(message, meta, callback) {
-        this.originalWinstonLogger.error(message, meta, callback);
-    }
-
-    error(message, ...meta){
-        this.originalWinstonLogger.error(message, ...meta);
-    }
-
-    error(message){
-        this.originalWinstonLogger.error(messag);
-    }
-
-    error(infoObject){
-        this.originalWinstonLogger.error(infoObject);
+    error(msg, splat) {
+        this.log('error', msg, splat);
     }
 
     // warn
-    warn(message, callback) {
-        this.originalWinstonLogger.warn(message, callback);
-    }
-
-    warn(message, meta, callback) {
-        this.originalWinstonLogger.warn(message, meta, callback);
-    }
-    warn(message, ...meta){
-        this.originalWinstonLogger.warn(message, ...meta);
-    }
-
-    warn(message){
-        this.originalWinstonLogger.warn(messag);
-    }
-
-    warn(infoObject){
-        this.originalWinstonLogger.warn(infoObject);
+    warn(msg, splat) {
+        this.log('warn', msg, splat);
     }
 
     // info
-    info(message, callback) {
-        this.originalWinstonLogger.info(message, callback);
-    }
-
-    info(message, meta, callback) {
-        this.originalWinstonLogger.info(message, meta, callback);
-    }
-
-    info(message, ...meta){
-        this.originalWinstonLogger.info(message, ...meta);
-    }
-
-    info(message){
-        this.originalWinstonLogger.info(messag);
-    }
-
-    info(infoObject){
-        this.originalWinstonLogger.info(infoObject);
+    info(msg, splat) {
+        this.log('info', msg, splat);
     }
 
     // http
-    http(message, callback) {
-        this.originalWinstonLogger.http(message, callback);
-    }
-
-    http(message, meta, callback) {
-        this.originalWinstonLogger.http(message, meta, callback);
-    }
-
-    http(message, ...meta){
-        this.originalWinstonLogger.http(message, ...meta);
-    }
-
-    http(message){
-        this.originalWinstonLogger.http(messag);
-    }
-
-    http(infoObject){
-        this.originalWinstonLogger.http(infoObject);
+    http(msg, splat) {
+        this.log('http', msg, splat);
     }
 
     // verbose
-    verbose(message, callback) {
-        this.originalWinstonLogger.verbose(message, callback);
-    }
-
-    verbose(message, meta, callback) {
-        this.originalWinstonLogger.verbose(message, meta, callback);
-    }
-
-    verbose(message, ...meta){
-        this.originalWinstonLogger.verbose(message, ...meta);
-    }
-
-    verbose(message){
-        this.originalWinstonLogger.verbose(messag);
-    }
-
-    verbose(infoObject){
-        this.originalWinstonLogger.verbose(infoObject);
+    verbose(msg, splat) {
+        this.log('verbose', msg, splat);
     }
 
     // debug
-    debug(message, callback) {
-        this.originalWinstonLogger.debug(message, callback);
-    }
-
-    debug(message, meta, callback) {
-        this.originalWinstonLogger.debug(message, meta, callback);
-    }
-
-    debug(message, ...meta){
-        this.originalWinstonLogger.debug(message, ...meta);
-    }
-
-    debug(message){
-        this.originalWinstonLogger.debug(messag);
-    }
-
-    debug(infoObject){
-        this.originalWinstonLogger.debug(infoObject);
+    debug(msg, splat) {
+        this.log('debug', msg, splat);
     }
 
     // silly;
-    silly(message, callback) {
-        this.originalWinstonLogger.silly(message, callback);
-    }
-
-    silly(message, meta, callback) {
-        this.originalWinstonLogger.silly(message, meta, callback);
-    }
-
-    silly(message, ...meta){
-        this.originalWinstonLogger.silly(message, ...meta);
-    }
-
-    silly(message){
-        this.originalWinstonLogger.silly(messag);
-    }
-
-    silly(infoObject){
-        this.originalWinstonLogger.silly(infoObject);
+    silly(msg, splat) {
+        this.log('silly', msg, splat);
     }
 };
