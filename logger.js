@@ -105,13 +105,8 @@ module.exports.MCLogger = class MCLogger {
     }
 
     // log
-    log(level, msg, splat) {
-        if (arguments.length === 1) {
-            return this.originalWinstonLogger.log(level);
-        } else if (arguments.length === 2) {
-            return this.originalWinstonLogger.log(level, msg);
-        } // else
-        return this.originalWinstonLogger.log(level, msg, splat);
+    log(...args) {
+        return this.originalWinstonLogger.log(...args);
     }
 
     // error
