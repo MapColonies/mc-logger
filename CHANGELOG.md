@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/MapColonies/mc-logger/compare/v2.0.0...v2.0.1) (2020-12-15)
+
+
+### Bug Fixes
+
+* fix log overloading function ([#16](https://github.com/MapColonies/mc-logger/issues/16)) ([b573fc0](https://github.com/MapColonies/mc-logger/commit/b573fc001bfd64cd1f943abf5a31685780372430))
+
 ## [2.0.0](https://github.com/MapColonies/mc-logger/compare/v1.2.1...v2.0.0) (2020-11-30)
 
 
