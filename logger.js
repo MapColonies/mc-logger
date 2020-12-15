@@ -47,40 +47,8 @@ module.exports.MCLogger = class MCLogger {
       transports: []
     };
 
-    const consoleLog = convertToBoolean(config.log2console);
-    const fileLog = convertToBoolean(config.log2file);
-    const serverLogConfig = config.log2httpServer;
-
-    if (consoleLog) {
-      params.transports.push(new transports.Console());
-    }
-
-    if (fileLog) {
-      const path = require('path');
-      const fs = require('fs');
-
-      const logDir = path.resolve('./logs');
-      if (!fs.existsSync(logDir)) {
-        fs.mkdirSync(logDir);
-      }
-
-      params.transports.push(generateFileTransport('info'));
-      params.transports.push(generateFileTransport('error'));
-    }
-
-    if (serverLogConfig) {
-      // validate server log config option
-      if (validateHttpConfig(serverLogConfig)) {
-        const httpTransport = generateHttpTransport(serverLogConfig);
-        params.transports.push(httpTransport);
-      }
-    }
-
-    // check if transports array is empty
-    if (!params.transports.length) {
-      console.warn('No configuration was provided, adding default console logger.');
-      params.transports.push(new transports.Console());
-    }
+    const transports = this.initializeTransports(config);
+    params.transports = transports;
 
     const extraDataFormat = format(info => {
       info.service = params.name;
@@ -104,6 +72,47 @@ module.exports.MCLogger = class MCLogger {
     });
 
     this.createLogMethods();
+  }
+
+  initializeTransports(config) {
+    const loggerTransports = [];
+    const consoleLog = convertToBoolean(config.log2console);
+    const fileLog = convertToBoolean(config.log2file);
+    const serverLogConfig = config.log2httpServer;
+
+    if (consoleLog) {
+      loggerTransports.push(new transports.Console());
+    }
+
+    if (fileLog) {
+      const transports = this.getFileTransports();
+      loggerTransports.concat(transports);
+    }
+
+    if (serverLogConfig && validateHttpConfig(serverLogConfig)) {
+      const httpTransport = generateHttpTransport(serverLogConfig);
+      loggerTransports.push(httpTransport);
+    }
+
+    // check if transports array is empty
+    if (!loggerTransports.length) {
+      console.warn('No configuration was provided, adding default console logger.');
+      loggerTransports.push(new transports.Console());
+    }
+    return loggerTransports;
+  }
+
+  getFileTransports() {
+    const path = require('path');
+    const fs = require('fs');
+
+    const logDir = path.resolve('./logs');
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir);
+    }
+
+    const result = [generateFileTransport('info'), generateFileTransport('error')];
+    return result;
   }
 
   createLogMethods() {
