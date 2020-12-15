@@ -102,45 +102,14 @@ module.exports.MCLogger = class MCLogger {
             ),
             transports: params.transports
         });
+
+        this.createLogMethods();
     }
 
-    // log
-    log(...args) {
-        return this.originalWinstonLogger.log(...args);
-    }
-
-    // error
-    error(...args) {
-        return this.originalWinstonLogger.error(...args)
-    }
-
-    // warn
-    warn(...args) {
-        return this.originalWinstonLogger.warn(...args)
-    }
-
-    // info
-    info(...args) {
-        return this.originalWinstonLogger.info(...args)
-    }
-
-    // http
-    http(...args) {
-        return this.originalWinstonLogger.http(...args)
-    }
-
-    // verbose
-    verbose(...args) {
-        return this.originalWinstonLogger.verbose(...args)
-    }
-
-    // debug
-    debug(...args) {
-        return this.originalWinstonLogger.debug(...args)
-    }
-
-    // silly;
-    silly(...args) {
-        return this.originalWinstonLogger.silly(...args)
+    createLogMethods() {
+        const logMethodType = ["log", "error", "warn", "info", "debug"];
+        logMethodType.forEach(methodName => {
+            this[methodName] = this.originalWinstonLogger[methodName].bind(this.originalWinstonLogger);
+        });
     }
 };
