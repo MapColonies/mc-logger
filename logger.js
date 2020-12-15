@@ -89,9 +89,7 @@ module.exports.MCLogger = class MCLogger {
         this.originalWinstonLogger = createLogger({
             level: params.level,
             format: format.combine(
-                format.timestamp({
-                    format: 'YYYY-MM-DD HH:mm:ss'
-                }),
+                format.timestamp(),
                 // todo: return when new winston npm version is released (merged to master)
                 //  issue: https://github.com/winstonjs/winston/issues/1724
                 //  fix: https://github.com/winstonjs/logform/pull/106
