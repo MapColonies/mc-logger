@@ -1,6 +1,6 @@
 {
   "extends": "standard",
-  "plugins": ["import", "node", "promise", "standard"],
+  "plugins": ["import", "node", "promise", "standard", "markdown"],
   "env": {
     "node": true
   },

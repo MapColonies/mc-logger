@@ -8,6 +8,7 @@
 # https://github.com/github/gitignore/blob/master/Node.gitignore
 
 logs
+testDir
 *.log
 npm-debug.log*
 yarn-debug.log*
