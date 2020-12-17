@@ -75,8 +75,8 @@ module.exports.MCLogger = class MCLogger {
     }
 
     if (fileLog) {
-      const transports = this.getFileTransports(config.log2file);
-      loggerTransports.concat(transports);
+      const fileTransport = this.getFileTransport(config.log2file);
+      loggerTransports.push(fileTransport);
     }
 
     if (serverLogConfig && validateHttpConfig(serverLogConfig)) {
@@ -92,33 +92,16 @@ module.exports.MCLogger = class MCLogger {
     return loggerTransports;
   }
 
-  getFileTransports(fileLoggerConfig) {
-    const result = [this.generateFileTransport('error', fileLoggerConfig)];
-    return result;
-  }
-
-  generateFileTransport(level, fileLoggerConfig) {
-    // don't pass lint - todo: deep clone
-    // const clonedConfig = {...fileLoggerConfig};
-
-    // don't break api
+  getFileTransport(fileLoggerConfig) {
+    // we need this so we won't break the api
     if (fileLoggerConfig === true) {
-      fileLoggerConfig = {}; // don't break api
+      fileLoggerConfig = {};
     }
-    const clonedConfig = fileLoggerConfig;
-    clonedConfig.filename = fileLoggerConfig.filename ? `${fileLoggerConfig.filename}.log` : 'filelog-.log';
-    clonedConfig.dirname = fileLoggerConfig.dirname ? fileLoggerConfig.dirname : './logs';
-    clonedConfig.maxsize = fileLoggerConfig.maxsize ? fileLoggerConfig.maxsize : 5242880; // 5MB;
-    clonedConfig.tailable = fileLoggerConfig.tailable ? fileLoggerConfig.tailable : true;
-
-    // const path = require('path');
-    // const fs = require('fs');
-    //
-    // const logDir = path.resolve(clonedConfig.dirname);
-    // if (!fs.existsSync(logDir)) {
-    //   fs.mkdirSync(logDir);
-    // }
-    return new transports.File(clonedConfig);
+    fileLoggerConfig.filename = fileLoggerConfig.filename ? `${fileLoggerConfig.filename}.log` : 'filelog-.log';
+    fileLoggerConfig.dirname = fileLoggerConfig.dirname ? fileLoggerConfig.dirname : './logs';
+    fileLoggerConfig.maxsize = fileLoggerConfig.maxsize ? fileLoggerConfig.maxsize : 5242880; // 5MB;
+    fileLoggerConfig.tailable = fileLoggerConfig.tailable ? fileLoggerConfig.tailable : true;
+    return new transports.File(fileLoggerConfig);
   }
 
   createLogMethods() {
