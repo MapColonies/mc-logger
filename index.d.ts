@@ -1,11 +1,11 @@
 import { LeveledLogMethod, Logger, LogMethod } from 'winston';
-import { HttpTransportOptions } from 'winston/lib/winston/transports';
+import { FileTransportOptions, HttpTransportOptions } from 'winston/lib/winston/transports';
 
 
 export interface ILoggerConfig {
   level: string;
   log2console?: boolean;
-  log2file?: boolean;
+  log2file?: FileTransportOptions;
   log2httpServer?: HttpTransportOptions;
 }
 

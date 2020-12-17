@@ -14,16 +14,6 @@ function validateHttpConfig(httpOptions) {
   return true;
 }
 
-function generateFileTransport(level) {
-  const path = require('path');
-  return new transports.File({
-    filename: `filelog-${level}.log`,
-    dirname: path.resolve('./logs'),
-    maxsize: 5242880, // 5MB
-    tailable: true
-  });
-}
-
 function generateHttpTransport(serverLogConfig) {
   return new transports.Http(serverLogConfig);
 }
@@ -77,7 +67,7 @@ module.exports.MCLogger = class MCLogger {
   initializeTransports(config) {
     const loggerTransports = [];
     const consoleLog = convertToBoolean(config.log2console);
-    const fileLog = convertToBoolean(config.log2file);
+    const fileLog = Boolean(config.log2file);
     const serverLogConfig = config.log2httpServer;
 
     if (consoleLog) {
@@ -85,7 +75,7 @@ module.exports.MCLogger = class MCLogger {
     }
 
     if (fileLog) {
-      const transports = this.getFileTransports();
+      const transports = this.getFileTransports(config.log2file);
       loggerTransports.concat(transports);
     }
 
@@ -102,17 +92,33 @@ module.exports.MCLogger = class MCLogger {
     return loggerTransports;
   }
 
-  getFileTransports() {
-    const path = require('path');
-    const fs = require('fs');
-
-    const logDir = path.resolve('./logs');
-    if (!fs.existsSync(logDir)) {
-      fs.mkdirSync(logDir);
-    }
-
-    const result = [generateFileTransport('info'), generateFileTransport('error')];
+  getFileTransports(fileLoggerConfig) {
+    const result = [this.generateFileTransport('error', fileLoggerConfig)];
     return result;
+  }
+
+  generateFileTransport(level, fileLoggerConfig) {
+    // don't pass lint - todo: deep clone
+    // const clonedConfig = {...fileLoggerConfig};
+
+    // don't break api
+    if (fileLoggerConfig === true) {
+      fileLoggerConfig = {}; // don't break api
+    }
+    const clonedConfig = fileLoggerConfig;
+    clonedConfig.filename = fileLoggerConfig.filename ? `${fileLoggerConfig.filename}.log` : 'filelog-.log';
+    clonedConfig.dirname = fileLoggerConfig.dirname ? fileLoggerConfig.dirname : './logs';
+    clonedConfig.maxsize = fileLoggerConfig.maxsize ? fileLoggerConfig.maxsize : 5242880; // 5MB;
+    clonedConfig.tailable = fileLoggerConfig.tailable ? fileLoggerConfig.tailable : true;
+
+    // const path = require('path');
+    // const fs = require('fs');
+    //
+    // const logDir = path.resolve(clonedConfig.dirname);
+    // if (!fs.existsSync(logDir)) {
+    //   fs.mkdirSync(logDir);
+    // }
+    return new transports.File(clonedConfig);
   }
 
   createLogMethods() {

@@ -14,8 +14,8 @@ const { MCLogger } = require("@map-colonies/mc-logger");
 const service = require("./package.json");
 
 const config = {
-    level:'info',
-    log2file: true
+    level: 'info',
+    log2file: FileTransportOptions
 }
 
 const logger = new MCLogger(config, service);
