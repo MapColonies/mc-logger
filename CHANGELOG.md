@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/MapColonies/mc-logger/compare/v2.0.1...v2.0.2) (2020-12-20)
+
+
+### Bug Fixes
+
+* fix type script build ([#21](https://github.com/MapColonies/mc-logger/issues/21)) ([6a44a0c](https://github.com/MapColonies/mc-logger/commit/6a44a0cfa3559b180e24fc359e6a61361fea47d0))
+* print time stamp in ISO format(utc) ([#18](https://github.com/MapColonies/mc-logger/issues/18)) ([6694216](https://github.com/MapColonies/mc-logger/commit/6694216d301bee775a96161b42cd2e8dd7ea55cf))
+* style and file transport bug - get output file path from user  ([#19](https://github.com/MapColonies/mc-logger/issues/19)) ([5fa469b](https://github.com/MapColonies/mc-logger/commit/5fa469bf5732155cd0da822e88c270fd676b3deb))
+
 ### [2.0.1](https://github.com/MapColonies/mc-logger/compare/v2.0.0...v2.0.1) (2020-12-15)
 
 
