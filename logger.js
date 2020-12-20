@@ -97,11 +97,12 @@ module.exports.MCLogger = class MCLogger {
     if (fileLoggerConfig === true) {
       fileLoggerConfig = {};
     }
-    fileLoggerConfig.filename = fileLoggerConfig.filename ? `${fileLoggerConfig.filename}.log` : 'filelog-.log';
-    fileLoggerConfig.dirname = fileLoggerConfig.dirname ? fileLoggerConfig.dirname : './logs';
-    fileLoggerConfig.maxsize = fileLoggerConfig.maxsize ? fileLoggerConfig.maxsize : 5242880; // 5MB;
-    fileLoggerConfig.tailable = fileLoggerConfig.tailable ? fileLoggerConfig.tailable : true;
-    return new transports.File(fileLoggerConfig);
+    const otherObject = { ...fileLoggerConfig };
+    otherObject.filename = fileLoggerConfig.filename ? `${fileLoggerConfig.filename}.log` : 'filelog-.log';
+    otherObject.dirname = fileLoggerConfig.dirname ? fileLoggerConfig.dirname : './logs';
+    otherObject.maxsize = fileLoggerConfig.maxsize ? fileLoggerConfig.maxsize : 5242880; // 5MB;
+    otherObject.tailable = fileLoggerConfig.tailable ? fileLoggerConfig.tailable : true;
+    return new transports.File(otherObject);
   }
 
   createLogMethods() {
