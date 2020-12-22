@@ -20,7 +20,7 @@
   "author": "Map-Colonies inc",
   "license": "ISC",
   "dependencies": {
-    "opentracing": "^0.14.1",
+    "opentracing": "^0.14.5",
     "winston": "^3.3.3"
   },
   "devDependencies": {
